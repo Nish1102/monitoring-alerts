@@ -1,0 +1,20 @@
+groups:
+  - name: service_alerts
+    rules:
+      - alert: NginxServiceDown 🚨
+        expr: node_systemd_unit_state{name="nginx.service", state="active"} == 0
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          Summary: "⚠️ **URGENT: Nginx Service Issue!** {{ $labels.instance }}"
+          Description: |
+            ❌ ᴛʜᴇ ɴɢɪɴx ꜱᴇʀᴠɪᴄᴇ ɪꜱ ᴄᴜʀʀᴇɴᴛʟʏ ᴅᴏᴡɴ!
+            ᴅᴏᴡɴᴛɪᴍᴇ: More than 5 seconds
+            🌍 ꜱᴇʀᴠᴇʀ: {{ $labels.instance }}
+            🔍 ᴀᴄᴛɪᴏɴ ʀᴇQᴜɪʀᴇᴅ: Immediate investigation needed. Restart the service to restore functionality! 🚀
+
+
+
+
+

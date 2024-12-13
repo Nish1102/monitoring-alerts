@@ -1,0 +1,18 @@
+groups:
+  - name: ip_down_alerts
+    rules:
+      - alert: IPAddressDown
+        expr: probe_success == 0
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} is down"
+          description: "The target {{ $labels.instance }} has been unreachable for more than 1 minute."
+
+
+
+
+
+
+

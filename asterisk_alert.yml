@@ -1,0 +1,17 @@
+groups:
+  - name: asterisk-monitoring
+    rules:
+      - alert: AsteriskServiceDown
+        expr: node_systemd_unit_state{name="asterisk.service",state="active"} == 0
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Asterisk service is down"
+          description: "The Asterisk service has been stopped or is not running for more than 1 minute."
+
+
+
+
+
+

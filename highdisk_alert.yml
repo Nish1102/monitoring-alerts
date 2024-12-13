@@ -1,0 +1,16 @@
+groups:
+  - name: disk_alerts
+    rules:
+      - alert: HighDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) > 0.25
+        for: 5s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Disk Usage on {{ $labels.instance }}"
+          description: "Disk usage on {{ $labels.instance }} is above 25% on the '/' mount point. Current usage: {{ $value | printf \"%.2f\" }}%. Consider freeing up space."
+
+
+
+
+

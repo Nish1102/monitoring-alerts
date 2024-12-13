@@ -1,0 +1,15 @@
+groups:
+  - name: postgresql_service_alerts
+    rules:
+      - alert: PostgreSQLServiceDown
+        expr: node_systemd_unit_state{name="postgresql.service", state="active"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL Service is Down on {{ $labels.instance }}"
+          description: "The PostgreSQL service is not active on {{ $labels.instance }}. Immediate attention required."
+
+
+
+

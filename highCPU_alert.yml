@@ -1,0 +1,22 @@
+groups:
+  - name: test_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 10
+        for: 10s
+        labels:
+          severity: critical
+          environment: production
+          team: ops
+        annotations:
+          summary: "🚨 High CPU Usage Alert for {{ $labels.instance }}"
+          description: |
+            🔥 **CPU Usage Critical**
+            Instance: `{{ $labels.instance }}`
+            Current CPU usage is over **10%** for the past **10 seconds**.
+            - **Threshold**: 10%
+            - **Environment**: {{ $labels.environment }} 
+            - **Team**: {{ $labels.team }}
+
+            Please investigate immediately to ensure continued performance and stability.
+

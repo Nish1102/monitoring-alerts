@@ -1,0 +1,13 @@
+groups:
+  - name: fastagi_service_alerts
+    rules:
+      - alert: FastAGIServiceDown
+        expr: node_systemd_unit_state{name="fastagi_server.service", state="active"} == 0
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          summary: "FastAGI Service is Down"
+          description: "The FastAGI service (fastagi_server.service) is currently inactive or not running. Please check the service status and restart it if necessary."
+
+

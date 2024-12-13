@@ -1,0 +1,57 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 5s
+  scrape_timeout: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - '5.78.103.3:9093'
+rule_files:
+  - '/etc/prometheus/asterisk_alert.yml'
+  - '/etc/prometheus/highCPU_alert.yml'
+  - '/etc/prometheus/highdisk_alert.yml'
+  - '/etc/prometheus/ip_monitor_alert.yml'
+  - '/etc/prometheus/kamailio_alert.yml'
+  - '/etc/prometheus/nginx_svc_alert.yml'
+  - '/etc/prometheus/postgres_svc_alerts.yml'
+  - '/etc/prometheus/fastagi_svc_alerts.yml'
+
+scrape_configs:
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets:
+          - '5.78.103.3:9100'    # Node exporter for main server
+          - '5.78.87.173:9100'   # Node exporter for Kamailio server
+
+ - job_name: 'blackbox_103'
+    metrics_path: /probe
+    params:
+      module: [icmp_ping]        # Use the ICMP ping module
+    static_configs:
+      - targets:
+          - '5.78.103.3'         # IP monitored by 5.78.103.3 Blackbox Exporter
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: '5.78.103.3:9115'  # Blackbox Exporter address
+
+  - job_name: 'blackbox_87'
+    metrics_path: /probe
+    params:
+      module: [icmp_ping]        # Use the ICMP ping module
+    static_configs:
+      - targets:
+          - '5.78.87.173'        # IP monitored by 5.78.87.173 Blackbox Exporter
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: '5.78.87.173:9115'  # Blackbox Exporter address
+
